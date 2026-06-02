@@ -1,0 +1,36 @@
+---
+- name: working on rhel host
+  hosts: rhel
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: check_uptime
+      shell: uptime
+      register: outuptime
+
+# print the register variable as output
+    - name: print uptime
+      debug:
+        var: outuptime.stdout  
+
+    - name: installing tmux
+      ansible.builtin.apt:
+        name: tmux
+        state: present
+      register: tmuxout
+      when: ansible_facts.os_family == "ubuntu"
+
+    - name: tmux check
+      shell: yum list installed | grep -i tmux
+      register: tmuxout
+
+    - name: tmux status
+      debug:
+        var: tmuxout.stdout   
+
+  handlers:
+    - name: uninstall tmux
+      ansible.builtin.yum:
+        name: tmux
+        state: absent      
