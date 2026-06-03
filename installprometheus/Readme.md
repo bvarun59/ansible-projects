@@ -1,0 +1,1 @@
+this is prometheus inatllation ansible playbook on rhel
